@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.kateapp.data.Product
 
+// Разметка для одного элемента Product в списке
 @Composable
 fun ProductListItem(product: Product) {
     Card(modifier = Modifier

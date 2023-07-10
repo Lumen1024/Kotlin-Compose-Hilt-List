@@ -10,10 +10,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+// Автоматически подставляет классы в конструкторы помеченные @Inject constructor
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(SingletonComponent::class) // Чтобы датабаза была синглтоном
 object DatabaseModule {
 
+    // Автоматическое создание датабазы
     @Singleton
     @Provides
     fun provideProductDatabase(
@@ -24,6 +26,7 @@ object DatabaseModule {
         "main_db"
     ).build()
 
+    // Автоматическое создание Дао
     @Singleton
     @Provides
     fun provideProductDao(db : ProductDatabase) = db.dao

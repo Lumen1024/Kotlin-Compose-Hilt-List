@@ -20,17 +20,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.kateapp.data.Product
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateProductScreen(
     viewModel: CreateProductViewModel,
     navHostController: NavHostController
 ) {
+    // Поля для заполнения
     val name by viewModel.name.collectAsState()
     val price by viewModel.price.collectAsState()
     val count by viewModel.count.collectAsState()
 
+    // Поле для показа либо кнопки либо индикации загрузки
     val isLoading by viewModel.isLoading.collectAsState()
 
     Column(
@@ -38,42 +40,44 @@ fun CreateProductScreen(
             .fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
+        // Колонка с полями продукта
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            TextField(
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                label = { Text(text = "Name") },
-                value = name.trim(), onValueChange = { viewModel.onNameEdit(it) })
-            TextField(
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                label = { Text(text = "Price") },
-                value = price.toString(),
-                onValueChange = { viewModel.onPriceEdit(it.toIntOrNull() ?: 0) })
-            TextField(
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                label = { Text(text = "Count") },
-                value = count.toString(),
-                onValueChange = { viewModel.onCountEdit(it.toIntOrNull() ?: 0) })
+            ProductField(
+                name.trim(),
+                Product::name.name
+            ) {
+                viewModel.onNameEdit(it)
+            }
+            ProductField(
+                price.toString(),
+                Product::price.name,
+                KeyboardOptions(keyboardType = KeyboardType.Number),
+            ) {
+                viewModel.onPriceEdit(it.toIntOrNull() ?: 0)
+            }
+            ProductField(
+                count.toString(),
+                Product::count.name,
+                KeyboardOptions(keyboardType = KeyboardType.Number),
+            ) {
+                viewModel.onCountEdit(it.toIntOrNull() ?: 0)
+            }
         }
+        // Кнопка при нажатии которой происходит добавление продукта и переход
+        // на главный экран
+        // Если добавление в процессе то кнопка блокируется и вместо текста появляется
+        // индикатор загрузки
         Button(
             enabled = !isLoading,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             onClick = { viewModel.onAdd(navHostController) },
-//            enabled = !isLoading.value,
         ) {
             if (isLoading) {
                 CircularProgressIndicator(color = Color.White)
@@ -81,6 +85,24 @@ fun CreateProductScreen(
                 Text(text = "Add")
             }
         }
-
     }
+}
+
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun ProductField(
+    value: String,
+    label: String,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    onValueChange: (String) -> Unit
+) {
+    TextField(
+        singleLine = true,
+        modifier = Modifier
+            .fillMaxWidth(),
+        keyboardOptions = keyboardOptions,
+        label = { Text(text = label) },
+        value = value, onValueChange = onValueChange
+    )
 }

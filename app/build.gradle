@@ -55,8 +55,6 @@ android {
 }
 
 dependencies {
-    //faker
-    implementation 'io.github.serpro69:kotlin-faker:1.14.0'
 
     // hilt
     def hilt_version = "2.46.1"

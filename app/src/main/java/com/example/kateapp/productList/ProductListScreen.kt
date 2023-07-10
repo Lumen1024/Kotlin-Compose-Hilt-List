@@ -74,7 +74,7 @@ private fun SearchField(
             FilterDropDownMenu(menuPopup, viewModel)
         },
         // Когда значение в строке поиска меняется вызывается эта функция
-        onValueChange = { viewModel.onTextEdit(it) }
+        onValueChange = { viewModel.onSearchTextEdit(it) }
     )
 }
 
@@ -119,10 +119,10 @@ private fun FilterDropDownMenu(
         expanded = menuPopup, // Открыт ли pop up
         onDismissRequest = { viewModel.onPopupToggle() }) // Вызывается при попытке закрытия pop up
     {
-        FilterMenuItem(viewModel, "id")
-        FilterMenuItem(viewModel, "name")
-        FilterMenuItem(viewModel, "price")
-        FilterMenuItem(viewModel, "count")
+        FilterMenuItem(viewModel, Product::id.name)
+        FilterMenuItem(viewModel, Product::name.name)
+        FilterMenuItem(viewModel, Product::price.name)
+        FilterMenuItem(viewModel, Product::count.name)
     }
 }
 
